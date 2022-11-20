@@ -1,0 +1,321 @@
+{% load static %}
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+            <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+            <link rel="stylesheet" href="{% static 'css/materialize.min.css' %}">
+            <link rel="icon" href="https://amitimg2captdotcom.files.wordpress.com/2021/11/logo.png?w=32" sizes="32x32" />
+            <link rel="icon" href="https://amitimg2captdotcom.files.wordpress.com/2021/11/logo.png?w=192" sizes="192x192" />
+            <link rel="apple-touch-icon" href="https://amitimg2captdotcom.files.wordpress.com/2021/11/logo.png?w=180" style="border-radius: 50%;"/>
+            <meta name="msapplication-TileImage" content="https://amitimg2captdotcom.files.wordpress.com/2021/11/logo.png?w=270" />
+        
+            <script src="{% static 'js/materialize.min.js' %}"></script>
+            <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+            <title>Image Caption with Machine Translation</title>
+        
+            <style>
+                body{
+                    background: linear-gradient(to left, #2c476e 0%, #06090e 100%);
+                }
+                
+        
+                /* .bg{
+                    background-color : rgb(7, 18, 32);
+                }
+                .bg1{
+                    background-color : rgb(59, 74, 94);
+                    padding:3px;
+                    padding-left: 5px;
+                    padding-right: 5px;
+                }
+                .short{
+                    height:0px;
+                }
+                nav{
+                    background: linear-gradient(to left, #142339 0%, #0D1117 100%);
+                    /* background-color: rgb(255, 255, 255); */
+                    /* color: black; */
+                /* }
+                .root
+                {
+                    height: 130vh;
+                    background: linear-gradient(to left, #2c476e 0%, #06090e 100%);
+                } */ 
+                /* section{
+                    margin-left:250px; 
+                } */
+                /* body{
+                    
+                } */
+                *{
+                margin:0;
+                padding:0;
+                list-style:none;
+                text-decoration: none;
+                }
+                .sidebar{
+                position:fixed;
+                left: -100%;     
+                width: 100%;     /**/
+                height: 100%;
+                background: #042331;
+                transition: all .5s ease;
+                }
+                .sidebar header{
+                font-size:  22px;
+                color:white;
+                text-align: center;
+                line-height: 70px;
+                background:#063146;
+                /* user-select: none; */
+                }
+                .sidebar ol a{
+                display: block;
+                height: 100%;
+                width: 100%;
+                /* text-align:center; */padding-left: 40px;
+                line-height: 65px;
+                font-size: 20px;
+                color:white;
+                box-sizing:border-box;
+                border-top: 1px solid rgba(255, 255, 255, .1);
+                border-bottom: 1px solid black;
+                transition: .4s;
+                }
+                ol li:hover a{
+                padding-left: 50px;
+                }
+                .sidebar ol a i{
+                margin-left: 16px;
+                }
+                #check{
+                display:none;
+                }
+                label #btn, label #cancel{
+                position:absolute;
+                cursor: pointer;
+                background: #042331;
+                background: none ;
+                border-radius: 3px;
+                }
+                label #btn{
+                z-index:2111;
+                /* left:40px; */
+                left:88%;
+                top:25px;
+                font-size: 35px;
+                color:white;
+                padding: 6px 12px;
+                transition: all .5s;
+                background:none;
+                }
+                label #cancel{
+                z-index:2111;
+                left:-94%;  
+                top:17px;
+                font-size: 30px;
+                color:#0a5257;
+                padding: 4px 9px;
+                transition: all .5s ease;
+                } 
+                #check:checked ~ .sidebar{
+                left:0;
+                z-index:1111;
+                }
+                #check:checked ~ label #btn{
+                z-index:1111;
+                left:100%;  /**/
+                opacity: 0;
+                pointer-events: none;
+                }
+                #check:checked ~ label #cancel{
+                left:90%; 
+                }
+                #check:checked ~ section{
+                    left: 200px;
+                }
+                
+                .nav2{
+                display:none;
+                }
+                
+                .nav1{
+                    background: linear-gradient(to left, #142339 0%, #0D1117 100%);
+                }
+                .bg{
+                    background-color : rgb(7, 18, 32);
+                }
+                .bg1{
+                    background-color : rgb(59, 74, 94);
+                    padding:3px;
+                    padding-left: 5px;
+                    padding-right: 5px;
+                }
+                .short{
+                    height:0px;
+                }
+                nav{
+                    background: linear-gradient(to left, #142339 0%, #0D1117 100%);
+                    /* background-color: rgb(255, 255, 255); */
+                    /* color: black; */
+                }
+                
+                
+        
+                .root
+                {
+                    height: 100%;
+                    background: linear-gradient(to left, #2c476e 0%, #06090e 100%);
+                }
+                
+        
+        
+                img{
+                    margin-top: -10px;
+                    /* position: absolute; */
+                    /* width:95%;
+                    height: 70%; */
+                    /* width : calc(100% + 100px); */
+                    width : 95%;
+                    max-height : auto;
+                    border: 20px ridge whitesmoke;
+                    border-radius: 10px;
+                    
+                }
+                .widget
+                {
+                    /* top:100%;
+                    left:50%;
+                    transform: translate(-50%, -50%); */
+                    border:5px ridge whitesmoke;
+                }
+        
+                .hee{
+                  margin-left: 60%;
+                  width:60%;
+                }
+                #img-preview{
+                  width:40%;
+                  margin-left: 5%; 
+                  /* background: linear-gradient(to left, #4d72aa 0%, #0D1117 100%);   */
+                  color:whitesmoke;
+                  border-radius:20px;
+                }
+                #id_img{
+                  margin-left: -5%;
+                }
+                
+            </style>
+        
+        </head>
+        <body>
+            <nav class="nav2" style="background: white; border-bottom: none; height: 0px;">
+                <input type="checkbox" id="check">
+                <label for="check">
+                  <i class="fas fa-bars" id="btn"></i>
+                  <i class="fas fa-times" id="cancel"></i>
+                </label>
+                  
+                <div class="sidebar">
+                  <header>
+                      <li><a href="{% url 'index' %}"><i class="fas fa-image"></i> Image Caption</a></li>
+                  </header>
+                  <ol>
+                    <li><a href=""><i class="fas fa-blog"></i> Blog</a></li>
+                    <li><a href="{% url 'technology' %}"><i class="fas fa-laptop"></i> Technology</a></li>
+                    <li><a href="{% url 'projects' %}"><i class="fas fa-project-diagram"></i> Project</a></li>
+                   </ol>
+                </div>
+            </nav>
+            <nav class="nav1" >
+                <div class="nav-wrapper col s12 m2">
+                  <a href="{% url 'index' %}" class="brand-logo"><i class="material-icons">image</i>Image Caption</a>
+                  <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+                  <ul class="right hide-on-med-and-down">
+                    <li><a href=""><i class="fas fa-blog"></i> Blog</a></li>
+                    <li><a href="{% url 'technology' %}"><i class="fas fa-laptop"></i> Technology</a></li>
+                    <li><a href="{% url 'projects' %}"><i class="fas fa-project-diagram"></i> Project</a></li>
+                  </ul>
+                </div>
+            </nav>
+        
+            <section>
+              <div class="col s12 m12 container">
+                
+                <div class="col s12 m12 container widget">
+                    <form action="" method='POST' enctype="multipart/form-data">
+        
+                        <div class="row center-align black-text">
+                            <label for="simple" name="text" style="font-weight: bolder; font-size: 22px; color: whitesmoke;">Let's us see what's happeing in the image</label>
+                        </div>
+        
+                        <div class="row center-align black-text">
+                            <label for="subm"></label>
+                            {% if res %}
+                                <div class="simp">
+                                    <img name="remove_me" id="remove_me" src="{{ imgform }}" alt="image">
+                                </div>
+                            {% else %}
+                                <div class="simp">
+                                    <img name="remove_me" id="remove_me" src="media/original/images.jpg"> 
+                                </div>
+                            {% endif %}
+                        </div>
+                        {% if res %}
+                            <div class="center-align" style="margin-top: -20px;">
+                                <!-- <h4 style="color:whitesmoke">Hi Amit I think, {{text}}</h4> -->
+                                <label for="simple" name="text" style="font-weight: bolder; font-size: 22px; color: whitesmoke; ">{{text}}</label>
+                            </div>
+                        {% else %}
+                        <div class="row" style="margin-top: -15px;">
+                                <div id="img-preview" class="col s12 m6 left-align" > 
+                                    <input type="file" name="img" accept="image/*" id="id_img" style="border-radius:20px;">
+                                </div>
+                                <div class="col s12 m5 center-align" class="sub">
+                                    <button type="submit" class="hee" style=" border-radius:20px;">generate text</button>
+                                </div>
+                            </div>
+                        {% endif %} 
+                    </form>    
+                </div>
+            </div>
+                </div>
+            </section>
+            <script>
+                
+                document.addEventListener('DOMContentLoaded', function() {
+                    var elems = document.querySelectorAll('.materialboxed');
+                    var instances = M.Materialbox.init(elems);
+                });
+                
+            </script>
+            <script>
+              var chooseFile= document.getElementById("id_img")
+              const imgPreview =  document.getElementById("img-preview")
+              chooseFile.addEventListener("change", function()
+              {
+                  getImgData();
+              })
+              function getImgData()
+              {
+                  var files = chooseFile.files[0];
+                  if(files)
+                  {   
+                      const fileReader = new FileReader();
+                      fileReader.readAsDataURL(files);
+                      fileReader.addEventListener("load", function()
+                      {
+                          var parent = document.getElementById("remove_me").src=this.result;
+                          
+                      });            
+                  }
+              }
+          </script>
+        
+            
+        </body>
+        </html>

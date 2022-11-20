@@ -1,0 +1,268 @@
+{% extends 'main/base.html' %}
+
+{% block style %}
+    <style>
+        *{
+        margin:0;
+        padding:0;
+        list-style:none;
+        text-decoration: none;
+        }
+        .sidebar{
+        position:fixed;
+        left: -100%;     /**/
+        width: 100%;     /**/
+        height: 100%;
+        background: #042331;
+        transition: all .5s ease;
+        }
+        .sidebar header{
+        font-size:  22px;
+        color:white;
+        text-align: center;
+        line-height: 70px;
+        background:#063146;
+        user-select: none;
+        }
+        .sidebar ul a{
+        /* display: block;
+        height: 100%;
+        width: 100%;
+        line-height: 65px;
+        font-size: 20px;
+        color:white;
+        padding-left: 40px;
+        box-sizing:border-box;
+        border-top: 1px solid rgba(255, 255, 255, .1);
+        border-bottom: 1px solid black;
+        transition: .4s; */
+        font-size:  22px;
+        color:white;
+        text-align: center;
+        line-height: 70px;
+        background:#063146;
+        user-select: none;
+        }
+        ul li:hover a{
+        padding-left: 50px;
+        }
+        .sidebar ul a i{
+        margin-left: 16px;
+        }
+        #check{
+        display:none;
+        }
+        label #btn, label #cancel{
+        position:absolute;
+        cursor: pointer;
+        background: #042331;
+        border-radius: 3px;
+        }
+        label #btn{
+        left:40px;
+        top:25px;
+        font-size: 35px;
+        color:white;
+        padding: 6px 12px;
+        transition: all .5s;
+        }
+        label #cancel{
+        z-index:2111;
+        left:-90%;  /**/
+        top:17px;
+        font-size: 30px;
+        color:#0a5257;
+        padding: 4px 9px;
+        transition: all .5s ease;
+        }
+        #check:checked ~ .sidebar{
+        left:0;
+        z-index:1111;
+        }
+        #check:checked ~ label #btn{
+        z-index:1111;
+        left:100%;  /**/
+        opacity: 0;
+        pointer-events: none;
+        }
+        #check:checked ~ label #cancel{
+        left:90%; 
+        }
+        #check:checked ~ section{
+            left: 200px;
+            }
+        section{
+            
+            background: linear-gradient(to left, #2c476e 0%, #06090e 100%);
+            background-position: center;
+            background-size: cover;
+            height: 100vh;
+            transition: all .5s;
+        }
+        .nav2{
+        display:none;
+        }
+        @media screen and (max-width: 992px) 
+        {
+            .nav1 {
+            display:none;
+            }
+            .nav2{
+            display:block;
+            }
+        }
+
+        .bg{
+            background-color : rgb(7, 18, 32);
+        }
+        .bg1{
+            background-color : rgb(59, 74, 94);
+            padding:3px;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+        .short{
+            height:0px;
+        }
+        nav{
+            background: linear-gradient(to left, #142339 0%, #0D1117 100%);
+            /* background-color: rgb(255, 255, 255); */
+            /* color: black; */
+        }
+        .root
+        {
+            height: 130vh;
+            background: linear-gradient(to left, #2c476e 0%, #06090e 100%);
+        }
+        /* section{
+            margin-left:250px; 
+        } */
+        /* body{
+            
+        } */
+
+        
+    </style>
+
+{% endblock %}
+
+{% block content %}
+<div class="root page-responsive">
+  <nav class="nav2">
+    <input type="checkbox" id="check">
+    <label for="check">
+      <i class="fas fa-bars" id="btn"></i>
+      <i class="fas fa-times" id="cancel"></i>
+    </label>
+      
+    <div class="sidebar">
+      <header>Send Email</header>
+      <ul>
+        <li><a href="#"><i class="fas fa-qrcode"></i>Dashboard</a></li>
+        <li><a href="#"><i class="fas fa-link"></i>Overview</a></li>
+        <li><a href="#"><i class="fas fa-stream"></i></a></li>
+        <li><a href="#"><i class="fas fa-calendar-week"></i></a></li>
+        <li><a href="#"><i class="fas fa-question-circle"></i></a></li>
+        <li><a href="#"><i class="fas fa-sliders-h"></i></a></li>
+        <li><a href="#"><i class="fas fa-envelope"></i></a></li>
+       </ul>
+    </div>
+  </nav>
+
+  <nav class="nav1">
+    <div class="nav-wrapper col s12 m2">
+      <a href="{% url 'index' %}" class="brand-logo"><i class="material-icons">email</i>Send Email</a>
+      <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+      <ul class="right hide-on-med-and-down">
+        <li><a href=""><i class="material-icons">refresh</i></a></li>
+        <li><a href="{% url 'languages' %}">Language</a></li>
+        <li><a href="{% url 'projects' %}">Project</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <section>
+    <div class="container">
+        
+      <div class="col s12 m12 container widget">
+          <form action="" method='POST' enctype="multipart/form-data">
+
+              <div class="row center-align black-text">
+                  <label for="simple" name="text" style="font-weight: bolder; font-size: 22px; color: whitesmoke;">Let's us see what's happeing in the image</label>
+              </div>
+
+              <div class="row center-align black-text">
+                  <label for="subm"></label>
+                  {% if res %}
+                      <div class="simp">
+                          <img name="remove_me" id="remove_me" src="{{ imgform }}" alt="image">
+                      </div>
+                  {% else %}
+                      <div class="simp">
+                          <img name="remove_me" id="remove_me" src="media/original/images.jpg"> 
+                      </div>
+                  {% endif %}
+              </div>
+              {% if res %}
+                  <div class="center-align" style="margin-top: -20px;">
+                      <!-- <h4 style="color:whitesmoke">Hi Amit I think, {{text}}</h4> -->
+                      <label for="simple" name="text" style="font-weight: bolder; font-size: 22px; color: black; ">Hi Amit I think, {{text}}</label>
+                  </div>
+              {% else %}
+              <div class="row" style="margin-top: -15px;">
+                      <div id="img-preview" class="col s12 m9" style="margin-left: 5%; color:black;"> 
+                          {% csrf_token %}
+                          {% for ele in imgform %}
+                              {{ ele }}
+                          {% endfor %}
+                          <!-- <input type="file" name="img" accept="image/*" id="id_img"> -->
+                      </div>
+                      <div class="col s12 m2">
+                          <button type="submit" style="width:100%;">Submit</button>
+                      </div>
+                  </div>
+              {% endif %} 
+          </form>    
+      </div>
+  </div>
+</section>
+<!-- <footer>
+    <div class="footer" style="display:flex; align-items:center; justify-content:center; font-weight:bold; ">
+        &copy; All Right Reserved By Amit Chourey.
+    </div>
+</footer> -->
+</div>
+
+{% endblock %}
+
+{% block script %}
+  <script>
+      // var x = document.getElementById("remove_me");
+      // var y = document.getElementById("remove_me").height;
+      // var z = x/y;
+      // x = z * 500;
+      // // document.getElementById("remove_me").width = x;
+      // document.getElementById("remove_me").height = 500;
+
+      var chooseFile= document.getElementById("id_img")
+      const imgPreview =  document.getElementById("img-preview")
+      chooseFile.addEventListener("change", function()
+      {
+          getImgData();
+      })
+      function getImgData()
+      {
+          var files = chooseFile.files[0];
+          if(files)
+          {   
+              const fileReader = new FileReader();
+              fileReader.readAsDataURL(files);
+              fileReader.addEventListener("load", function()
+              {
+                  var parent = document.getElementById("remove_me").src=this.result;
+                  
+              });            
+          }
+      }
+  </script>
+{% endblock %}

@@ -1,0 +1,593 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/materialize.min.css' %}">
+    <script src="{% static 'js/materialize.min.js' %}"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <title>Image Caption with Machine Translation</title>
+    <!-- <meta http-equiv="content-type" content="text/html; charset=UTF-8" /> -->
+    <!-- JQuery Library -->
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> -->
+    {% block style %}
+    <style>
+        .vis {
+            display: block;
+            overflow: visible !important;
+        }
+
+        body {
+            background: linear-gradient(to left, #ffffff 0%, #f8f8fa 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            text-decoration: none;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: -100%;
+            width: 100%;
+            /**/
+            height: 100%;
+            background: #042331;
+            transition: all .5s ease;
+        }
+
+        .sidebar header {
+            font-size: 22px;
+            color: white;
+            text-align: center;
+            line-height: 70px;
+            background: #063146;
+            user-select: none;
+        }
+
+        .sidebar ol a {
+            display: block;
+            height: 100%;
+            width: 100%;
+            /* text-align:center; */
+            padding-left: 40px;
+            line-height: 65px;
+            font-size: 20px;
+            color: white;
+            box-sizing: border-box;
+            border-top: 1px solid rgba(255, 255, 255, .1);
+            border-bottom: 1px solid black;
+            transition: .4s;
+        }
+
+        ol li:hover a {
+            padding-left: 50px;
+        }
+
+        .sidebar ol a i {
+            margin-left: 16px;
+        }
+
+        #check {
+            display: none;
+        }
+
+        label #btn,
+        label #cancel {
+            position: absolute;
+            cursor: pointer;
+            /* background: #042331; */
+            background-color: none;
+            border-radius: 3px;
+        }
+
+        label #btn {
+            z-index: 2111;
+            left: 88%;
+            top: 25px;
+            font-size: 35px;
+            color: white;
+            padding: 6px 12px;
+            transition: all .5s;
+        }
+
+        label #cancel {
+            z-index: 2111;
+            left: -94%;
+            top: 17px;
+            font-size: 30px;
+            color: #0a5257;
+            padding: 4px 9px;
+            transition: all .5s ease;
+        }
+
+        #check:checked~.sidebar {
+            left: 0;
+            z-index: 1111;
+        }
+
+        #check:checked~label #btn {
+            z-index: 1111;
+            left: 100%;
+            /**/
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #check:checked~label #cancel {
+            left: 90%;
+        }
+
+        #check:checked~section {
+            left: 200px;
+        }
+
+        .nav2 {
+            display: none;
+        }
+
+        @media screen and (max-width: 992px) {
+            .nav1 {
+                display: none;
+            }
+
+            .nav2 {
+                display: block;
+            }
+
+            section {
+                margin-top: -40px;
+            }
+
+            /* #check:checked ~ .nav2{
+                margin-top: -80px;
+            } */
+            /* #check:checked ~ section{
+                margin-top: -80px;
+            } */
+        }
+
+        .nav1 {
+            background: linear-gradient(to left, #142339 0%, #0D1117 100%);
+        }
+
+
+        nav {
+            background: linear-gradient(to left, #142339 0%, #0D1117 100%);
+            /* background-color: rgb(255, 255, 255); */
+            /* color: black; */
+        }
+
+        .root {
+            height: 110vh;
+            background: linear-gradient(to left, #ffffff 0%, #f8f8fa 100%);
+        }
+
+        img {
+            margin-top: -10px;
+            /* position: absolute; */
+            /* width:95%;
+            height: 70%; */
+            /* width : calc(100% + 100px); */
+            width: 95%;
+            max-height: auto;
+            border: 20px ridge whitesmoke;
+            border-radius: 10px;
+
+        }
+
+        .widget {
+            /* top:100%;
+            left:50%;
+            transform: translate(-50%, -50%); */
+            border: 5px ridge whitesmoke;
+        }
+
+        .hee {
+            margin-left: 60%;
+            width: 60%;
+        }
+
+        #img-preview {
+            width: 40%;
+            margin-left: 5%;
+            /* background: linear-gradient(to left, #4d72aa 0%, #0D1117 100%);   */
+            color: whitesmoke;
+            border-radius: 20px;
+        }
+
+        #id_img {
+            margin-left: -5%;
+        }
+
+        /* On screens that are 992px or less, set the background color to blue */
+        @media screen and (max-width: 992px) {
+            .root {
+                /* margin-top:30%; */
+            }
+
+            .widget {
+                margin-top: 5%;
+                height: 120%;
+                width: 100%;
+            }
+
+            img {
+                margin-top: -10px;
+                /* position: absolute; */
+                /* width:95%;
+            height: 70%; */
+                /* width : calc(100% + 100px); */
+                width: 95%;
+                max-height: auto;
+                border: 20px ridge whitesmoke;
+                border-radius: 10px;
+            }
+        }
+
+        @media screen and (max-width: 1024px) {
+            .root {
+                /* margin-top:30%; */
+            }
+
+            .widget {
+                margin-top: 5%;
+                height: 100%;
+                width: 90%;
+            }
+
+            img {
+                margin-top: -10px;
+                /* position: absolute; */
+                /* width:95%;
+            height: 70%; */
+                /* width : calc(100% + 100px); */
+                width: 95%;
+                max-height: auto;
+                border: 20px ridge whitesmoke;
+                border-radius: 10px;
+            }
+        }
+
+        /* On screens that are 600px or less, set the background color to olive */
+        @media screen and (max-width: 600px) {
+            .hee {
+                margin-left: 2%;
+                width: 92%;
+            }
+
+            #id_img {
+                margin-left: -53%;
+            }
+
+            #img-preview {
+                width: 85%;
+                margin-left: 47%;
+            }
+
+            .sub {
+                width: 100%;
+                margin-left: -20px;
+                border-radius: 20px;
+            }
+
+            .root {
+                /* display:flex;
+                justify-content: center;
+                align-items: center; */
+                /* margin-top:30%; */
+            }
+
+            .widget {
+                margin-top: 5%;
+                height: 100%;
+                width: 100%;
+            }
+
+            img {
+                margin-top: -10px;
+                /* position: absolute; */
+                /* width:95%;
+            height: 70%; */
+                /* width : calc(100% + 100px); */
+                width: 95%;
+                max-height: auto;
+                border: 20px ridge whitesmoke;
+                border-radius: 10px;
+            }
+
+            body {
+                margin: 0;
+                padding: 0;
+                width: 100vw;
+                height: 100vh;
+                background-color: #eee;
+            }
+
+            .content {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 100%;
+                height: 100%;
+            }
+
+            .loader-wrapper {
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                top: 0;
+                left: 0;
+                background-image: linear-gradient(to bottom, #000, rgb(0, 0, 68));
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .loader {
+                display: inline-block;
+                width: 30px;
+                height: 30px;
+                position: relative;
+                border: 4px solid #Fff;
+                animation: loader 2s infinite ease;
+            }
+
+            .loader-inner {
+                vertical-align: top;
+                display: inline-block;
+                width: 100%;
+                background-color: #fff;
+                animation: loader-inner 2s infinite ease-in;
+            }
+
+            @keyframes loader {
+                0% {
+                    transform: rotate(0deg);
+                }
+
+                25% {
+                    transform: rotate(180deg);
+                }
+
+                50% {
+                    transform: rotate(180deg);
+                }
+
+                75% {
+                    transform: rotate(360deg);
+                }
+
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+
+            @keyframes loader-inner {
+                0% {
+                    height: 0%;
+                }
+
+                25% {
+                    height: 0%;
+                }
+
+                50% {
+                    height: 100%;
+                }
+
+                75% {
+                    height: 100%;
+                }
+
+                100% {
+                    height: 0%;
+                }
+            }
+        }
+    </style>
+
+    {% endblock %}
+
+    {% block content %}
+    <!-- <div class="loader-wrapper">
+        <span class="loader"><span class="loader-inner"></span></span>
+    </div> -->
+
+    <!-- JQuery Code to display loader while the webpage is still loading -->
+    <!-- <script>
+        $(window).on("load", function () {
+            $(".loader-wrapper").fadeOut("slow");
+        });
+    </script> -->
+    <div class="root">
+        <!-- Nav bar for Dekstop -->
+        <nav class="nav2" style="background: white; border-bottom: none; height: 0px;">
+            <input type="checkbox" id="check">
+            <label for="check">
+                <i class="fas fa-bars" id="btn"></i>
+                <i class="fas fa-times" id="cancel"></i>
+            </label>
+
+            <div class="sidebar">
+                <header>
+                    <li><a href="{% url 'my_asset_transportation_requests' %}" class="brand-logo"><i
+                                class="fab fa-google-wallet"></i>Lets Ride</a>
+                    </li>
+                </header>
+                <ol>
+                    <li><a href="{% url 'my_asset_transportation_requests' %}" style="font-size: x-large;"><i
+                                class="fas fa-image"></i> Lets Ride</a></li>
+                    <li><a href="https://amitimg2captdotcom.wordpress.com/"><i class="fas fa-blog"></i> Blog</a></li>
+                    <li><a href="{% url 'technology' %}"><i class="fas fa-laptop"></i> Technology</a></li>
+                    <li><a href="{% url 'projects' %}"><i class="fas fa-project-diagram"></i> Project</a></li>
+                    <!-- <li><a href="#"><i class="fas fa-stream"></i>Dashboard2</a></li>
+            <li><a href="#"><i class="fas fa-calendar-week"></i>Dashboard3</a></li>
+            <li><a href="#"><i class="fas fa-question-circle"></i>Dashboard4</a></li>
+            <li><a href="#"><i class="fas fa-sliders-h"></i>Dashboard5</a></li>
+            <li><a href="#"><i class="fas fa-envelope"></i>Dashboard6</a></li> -->
+                </ol>
+            </div>
+        </nav>
+        <nav class="nav1">
+            <div class="nav-wrapper col s12 m2">
+                &nbsp&nbsp<a href="{% url 'my_asset_transportation_requests' %}" class="brand-logo"><i
+                        class="fab fa-google-wallet"></i>Lets Ride</a>
+                <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+                <ul class="right hide-on-med-and-down">
+                    <li><a href="{% url 'my_asset_transportation_requests' %}" style="font-size: x-large;"><i
+                                class="fas fa-image"></i> Lets Ride</a></li>
+                    <li><a href="https://amitimg2captdotcom.wordpress.com/"><i class="fas fa-blog"></i> Blog</a></li>
+                    <li><a href="{% url 'technology' %}"><i class="fas fa-laptop"></i> Technology</a></li>
+                    <li><a href="{% url 'projects' %}"><i class="fas fa-project-diagram"></i> Project</a></li>
+                </ul>
+            </div>
+        </nav>
+        <section>
+            <!-- This Section is the main screen of our web page -->
+            <h1 class="center-align" style="color:rgb(21, 21, 21);">Lets Ride</h1>
+            <div class="container">
+                <div class="row">
+                    <div class="col s12 m12 container">
+                        <div class="card blue-grey darken-1 container"
+                            style="background: linear-gradient(to left, #ffffff 0%, #f8f8fa 100%); border: 5px ridge whitesmoke; height:100%; margin-left: 15%;">
+                            <div class="row center-align black-text">
+                                <label for="simple" name="text"
+                                    style="font-weight: bolder; font-size: 22px; color:rgb(21, 21, 21);">
+                                    Sign Up</label>
+                            </div>
+                            <div class="" style="margin-top: -20px;">
+                                <div style="margin-left: 15px; margin-top: 10px;">
+                                    <form action="" method='POST' enctype="multipart/form-data">
+                                        <!-- {% csrf_token %}
+                                        <label for="id_username"
+                                            style="font-weight: bolder; font-size: 22px; color: whitesmoke; ">UserName
+                                        </label>
+                                        <input class='card-content white-text' type="text" name="username"
+                                            maxlength="256" required="" id="id_username"
+                                            style="background: linear-gradient(to left, #0e131b 0%, #37588a 100%);">
+
+                                        <label for="id_user_password"
+                                            style="font-weight: bolder; font-size: 22px; color: whitesmoke; ">Password
+                                        </label>
+                                        <input class='card-content white-text' type="text" name="user_password"
+                                            maxlength="256" required="" id="id_user_password"
+                                            style="background: linear-gradient(to left, #0e131b 0%, #37588a 100%);"> -->
+
+                                        <!-- <label for="id_password2"
+                                            style="font-weight: bolder; font-size: 22px; color: whitesmoke; ">Password
+                                            confirmation
+                                        </label>
+                                        <input class='card-content white-text' type="password" name="" maxlength="256"
+                                            required="" id=""
+                                            style="background: linear-gradient(to left, #0e131b 0%, #37588a 100%);">
+
+                                        <br><br> -->
+
+                                        <!-- <div class="row center-align black-text">
+                                            <button class="btn waves-effect waves-light vis col s12 m4" type="submit"
+                                                style="height:45px;width: 27%;margin-left: 32%; border-radius: 20px">Continue
+                                                <i class="material-icons right">send</i>
+                                            </button>
+                                        </div> -->
+
+                                        {% csrf_token %}
+                                        {% for field in form %}
+                                        <p>
+                                            {{ field.label_tag }}<br>
+                                            {{ field }}
+                                            {% if field.help_text %}
+                                            <!-- <small style="color: rgb(14, 184, 20)">{{ field.help_text }}</small> -->
+                                            {% endif %}
+                                            {% for error in field.errors %}
+                                        <p style="color: red">{{ error }}</p>
+                                        {% endfor %}
+                                        </p>
+                                        {% endfor %}
+                                        <div class="row center-align black-text">
+                                            <button class="btn waves-effect waves-light vis col s12 m4" type="submit"
+                                                style="height:45px;width: 27%;margin-left: 35%; border-radius: 20px">Continue
+                                                <i class="material-icons right">send</i>
+                                            </button>
+                                        </div>
+                                    </form>
+                                    <!-- <br><br><br> -->
+                                </div> <!-- margin -->
+                            </div> <!-- center -->
+                        </div> <!-- container -->
+
+                        <h5 class="center-align" style="color:rgb(21, 21, 21);">Already have an account?</h5>
+
+                        <div class="card blue-grey darken-1 container"
+                            style="background: linear-gradient(to left, #ffffff 0%, #f8f8fa 100%); border: 5px ridge whitesmoke; height:100%; margin-left: 15%;">
+                            <div class="" style="margin-top: -20px;">
+                                <div style="margin-left: 15px; margin-top: 10px;">
+                                    <form action="login" method='POST' enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                        <br>
+                                        <div class="row center-align black-text">
+                                            <button class="btn waves-effect waves-light vis col s12 m4" type="submit"
+                                                style="height:45px;width: 47%;margin-left: 25%; border-radius: 10px">Sign
+                                                In
+                                                <i class="material-icons right">send</i>
+                                            </button>
+                                        </div>
+                                    </form>
+                                    <!-- <br><br><br> -->
+                                </div> <!-- margin -->
+                            </div> <!-- center -->
+                        </div> <!-- container -->
+                    </div> <!-- container -->
+                </div> <!-- row -->
+            </div> <!-- container -->
+            <div class="footer-copyright">
+                <div class="container" style="font-weight: bold;">
+                    © All Right Reserved By Amit Chourey.
+                </div>
+            </div>
+        </section>
+        {% endblock %}
+
+        {% block script %}
+
+        <script>
+
+            document.addEventListener('DOMContentLoaded', function () {
+                var elems = document.querySelectorAll('.collapsible');
+                var instances = M.Collapsible.init(elems);
+            });
+            // var x = document.getElementById("remove_me");
+            // var y = document.getElementById("remove_me").height;
+            // var z = x/y;
+            // x = z * 500;
+            // // document.getElementById("remove_me").width = x;
+            // document.getElementById("remove_me").height = 500;
+
+            var chooseFile = document.getElementById("id_img")
+            const imgPreview = document.getElementById("img-preview")
+            let a = 10
+            console.log(`hav ${a}` + a)
+            // confirm("ajj")
+            chooseFile.addEventListener("change", function () {
+                getImgData();
+            })
+            function getImgData() {
+                var files = chooseFile.files[0];
+                if (files) {
+                    const fileReader = new FileReader();
+                    fileReader.readAsDataURL(files);
+                    fileReader.addEventListener("load", function () {
+                        var parent = document.getElementById("remove_me").src = this.result;
+
+                    });
+                }
+            }
+        </script>
+        {% endblock %}
