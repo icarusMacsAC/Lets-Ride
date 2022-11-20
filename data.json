@@ -1,0 +1,20 @@
+{
+    "NAME" : "AMIT CHOUREY",
+    "ABOUT_ME" : "I am a student of SIRTS college",
+    "TECHNOLOGY" : [
+        "Machine Learning",
+        "Deep Learning",
+        "Python",
+        "Django",
+        "Java",
+        "C++",
+        "C"
+    ],
+    "PROJECTS" : [
+        ["label_outline", "Image Caption Generator", "Image Caption Generator , Automatically describe content of an image into Natural Language"],
+        ["label_outline", "Face detection", "Face detection is computer vision and image processing, the problem statements involve finding or detecting human faces in photos"],
+        ["label_outline", "Image Caption with Machine Translation", "Image Caption Generator , Automatically describe content of an image into Natural Language and then it convert the output in any specifioc language"],
+        ["label_outline", "Handwritten digit recognition", "Handwritten digit recognition from the MNIST database is already hugely famous among the deep learning community for several recent decades now, as decreasing the error rate with different classifiers and parameters"],
+        ["label_outline", "Human Activity Reogniztion", "Human activity recognization, Automatically detect the activity of human(like sad, happy, cool etc)"]
+    ]
+} 
